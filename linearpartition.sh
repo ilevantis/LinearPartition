@@ -11,6 +11,7 @@ Input is read from STDIN (same as the original Python wrapper).
 Options (matching the Python gflags wrapper):
   -b, --beamsize INT            set beam size (default: 100)
   -V, --Vienna                  use Vienna parameters (default: off)
+  -E, --Eterna                  use Eternafold parameters (default: off)
       --sharpturn               enable sharp turn in prediction
       --verbose                 print beamsize / energy info / runtime info
   -o, --output FILE             output base pairing probability matrix to FILE (no overwrite)
@@ -42,6 +43,7 @@ EOF
 # ---- defaults (match Python wrapper) ----
 beamsize="100"
 vienna=0
+eterna=0
 sharpturn=0
 verbose=0
 output=""
@@ -73,6 +75,9 @@ while [[ $# -gt 0 ]]; do
 
     -V|--Vienna|--vienna)
       vienna=1; shift;;
+
+    -E|--Eterna|--eterna)
+      eterna=1; shift;;
 
     --sharpturn)
       sharpturn=1; shift;;
@@ -260,6 +265,7 @@ fi
 is_sharpturn="$sharpturn"
 is_verbose="$verbose"
 use_vienna="$vienna"
+use_eterna="$eterna"
 mea_flag="$mea"
 tk_flag="$threshknot"
 MEA_bpseq="$bpseq"
@@ -286,6 +292,8 @@ resolve_self() {
 script_dir="$(resolve_self)"
 if [[ "$use_vienna" -eq 1 ]]; then
   exe="$script_dir/linearpartition_v"
+elif [[ "$use_eterna" -eq 1 ]]; then
+  exe="$script_dir/linearpartition_e"
 else
   exe="$script_dir/linearpartition_c"
 fi
