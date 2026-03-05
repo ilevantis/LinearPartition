@@ -9,7 +9,8 @@ FLAGS = flags.FLAGS
 
 def setgflags():
     flags.DEFINE_integer('beamsize', 100, "set beam size", short_name='b')
-    flags.DEFINE_boolean('Vienna', False, "use vienna parameters", short_name='V')
+    # flags.DEFINE_boolean('Vienna', False, "use vienna parameters", short_name='V')
+    flags.DEFINE_string('parameters', 'c', 'use contrafold (c), vienna (v) or eternafold (e) parameters (DEFAULT=c)')
     flags.DEFINE_boolean('sharpturn', False, "enable sharp turn in prediction")
     flags.DEFINE_boolean('verbose', False, "print out beamsize, Log Partition Coefficient (default mode) or free energy of ensumble (-V mode) and runtime information")
     flags.DEFINE_string('output', '', "output base pairing probability matrix to a file with user specified name", short_name="o") # output mode
@@ -32,7 +33,8 @@ def setgflags():
     argv = FLAGS(sys.argv)
 
 def main():
-    use_vienna = FLAGS.V
+    # use_vienna = FLAGS.V
+    parameters = FLAGS.parameters
     beamsize = str(FLAGS.b)
     is_sharpturn = '1' if FLAGS.sharpturn else '0'
     is_verbose = '1' if FLAGS.verbose else '0'
@@ -82,11 +84,11 @@ def main():
             print("Exit!\n");
             exit();
 
-    if FLAGS.evaly:
-        use_vienna = True # eval p(y|x) only in Vienna mode
+    # if FLAGS.evaly:
+    #     use_vienna = True # eval p(y|x) only in Vienna mode
 
     path = os.path.dirname(os.path.abspath(__file__))
-    cmd = ["%s/%s" % (path, ('bin/linearpartition_v' if use_vienna else 'bin/linearpartition_c')), beamsize, is_sharpturn, is_verbose, bpp_file, bpp_prefix, pf_only, bpp_cutoff, forest_file, mea, gamma, TK, threshold, ThreshKnot_prefix, MEA_prefix, MEA_bpseq, shape_file_path, is_fasta, dangles, evaly]
+    cmd = ["%s/%s" % (path, 'bin/linearpartition_' + parameters), beamsize, is_sharpturn, is_verbose, bpp_file, bpp_prefix, pf_only, bpp_cutoff, forest_file, mea, gamma, TK, threshold, ThreshKnot_prefix, MEA_prefix, MEA_bpseq, shape_file_path, is_fasta, dangles, evaly]
     subprocess.call(cmd, stdin=sys.stdin)
     
 if __name__ == '__main__':

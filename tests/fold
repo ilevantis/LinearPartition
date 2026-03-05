@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Remove previous outputs
+rm -f output/$1*.txt
+
+# Run linearpartition with 3 different parameter sets
+cat input/$1.fasta | ../linearpartition -o output/$1-linearpartition_v.txt --parameters v
+cat input/$1.fasta | ../linearpartition -o output/$1-linearpartition_c.txt --parameters c
+cat input/$1.fasta | ../linearpartition -o output/$1-linearpartition_e.txt --parameters e
+
+# Run eternafold
+ETERNAFOLDPATH="../../EternaFold"
+$ETERNAFOLDPATH/src/contrafold predict input/$1.fasta --params $ETERNAFOLDPATH/parameters/EternaFoldParams.v1 --posteriors 0.00001 output/$1-eternafold.txt

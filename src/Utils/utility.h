@@ -13,7 +13,11 @@
 #include <cstring>
 #include <assert.h>
 
+#ifdef lpe
+#include "feature_weight_e.h"
+#else
 #include "feature_weight.h"
+#endif
 
 #define INF 1000000007
 
